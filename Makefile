@@ -4,6 +4,12 @@ clean_venv:
 	source deactivate || true
 	rm -rf $(VENV)
 
+clean_env:
+	rm -f .env
+
+env: clean_env
+	cp -p .env.tpl .env
+
 $(VENV): clean_venv
 	command -v deactivate && source deactivate || true
 	python -m venv $(VENV)
@@ -16,8 +22,13 @@ requirements.txt: requirements.in
 
 setup:
 	test -r $(VENV) || make $(VENV)
+	test -r .env || make env
 	test -f requirements.txt || make requirements.txt
 	source $(VENV)/bin/activate && pip install -r requirements.txt
 
 pip_sync: requirements.txt
 	source $(VENV)/bin/activate && pip-sync requirements.txt
+
+runserver:
+	test -r .env || make env
+	$(VENV)/bin/uvicorn app.server:app --host 0.0.0.0 --port 9080 --reload

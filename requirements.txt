@@ -18,6 +18,8 @@ idna==3.3
     # via anyio
 pydantic==1.9.0
     # via fastapi
+python-dotenv==0.19.2
+    # via -r requirements.in
 sniffio==1.2.0
     # via anyio
 starlette==0.17.1
