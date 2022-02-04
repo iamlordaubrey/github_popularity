@@ -20,7 +20,18 @@ Run server
 make runserver
 ```
 
-# Documentation 
+# Docker #
+To run the application using docker
+```commandline
+docker-compose up
+```
+
+To rebuild the image, then run the application
+```commandline
+docker-compose up --build
+```
+
+# Documentation #
 Interactive API documentation available at the following endpoints:
 ```commandline
 /docs
