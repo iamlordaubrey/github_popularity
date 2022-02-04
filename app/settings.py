@@ -7,6 +7,7 @@ DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 class Settings(BaseSettings):
     port: str
+    root_dir: str = DIR_PATH
 
     class Config:
         env_file = DIR_PATH + '/../.env'

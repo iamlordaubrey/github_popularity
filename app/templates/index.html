@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>GitHub Popularity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <form method="POST">
+        <input type="text" name="url" required><br>
+        <input type="submit" value="Check Popularity">
+    </form>
+
+    <h2>
+        {% if response %}
+            {{ response.score }}
+        {% else %}
+            Enter a GitHub repository
+        {% endif %}
+    </h2>
+</body>
+</html>
