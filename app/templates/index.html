@@ -12,10 +12,14 @@
     </form>
 
     <h2>
-        {% if response %}
-            {{ response.score }}
+        {% if errors %}
+            <ul>
+                {% for error_key, error_value in errors.items() %}
+                    <li>{{ error_value }}</li>
+                {% endfor %}
+            </ul>
         {% else %}
-            Enter a GitHub repository
+            <p>{{ response }}</p>
         {% endif %}
     </h2>
 </body>

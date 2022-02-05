@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 
 from app.settings import settings
 from app.schemas.form_schema import RepositoryURLSchema
+from app.utils.validators import url_validator
 
 router = APIRouter()
 templates = Jinja2Templates(directory=Path(settings.root_dir, "templates"))
@@ -29,7 +30,10 @@ def index(request: Request, repository: RepositoryURLSchema = Depends(Repository
     :param repository: A GitHub repository link
     :return: Renders a page with the repository's popularity status
     """
-    # ToDo: Check if the link is a valid GitHub link
-    print('repo url: ', repository.url)
-    response = {'score': None}
-    return templates.TemplateResponse('index.html', {'request': request, 'response': response})
+    errors = {}
+    response = 'Placeholder'
+    if not url_validator(repository.url):
+        errors['invalid_url'] = f'The URL {repository.url} is invalid. Sample URL: https://github.com/vuejs/vue'
+
+    context = {'request': request, 'response': response, 'errors': errors}
+    return templates.TemplateResponse('index.html', context)
