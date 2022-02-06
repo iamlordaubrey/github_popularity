@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     port: str
     root_dir: str = DIR_PATH
 
+    log_level: str = 'INFO'
+
     class Config:
         env_file = DIR_PATH + '/../.env'
 

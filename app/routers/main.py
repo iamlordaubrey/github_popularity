@@ -1,4 +1,5 @@
 import httpx
+import logging
 
 from pathlib import Path
 
@@ -13,6 +14,9 @@ from app.utils.helpers import validate_url, calculate_score, validate_operands
 
 router = APIRouter()
 templates = Jinja2Templates(directory=Path(settings.root_dir, "templates"))
+
+logger = logging.getLogger(__name__)
+logger.setLevel(settings.log_level)
 
 
 @router.get('/', response_class=HTMLResponse)
@@ -41,8 +45,11 @@ async def index(request: Request, repository: URLSchema = Depends(URLSchema.as_f
     is_url_valid, owner_repo = validate_url(repository_url)
 
     if not is_url_valid:
-        errors['invalid_url'] = f'The URL {repository.url} is invalid. Sample URL: https://github.com/vuejs/vue'
-        # ToDo: Log errors
+        errors['invalid_url'] = 'The URL {repository_url} is invalid. Sample URL: https://github.com/vuejs/vue'
+        logger.warning(f'The URL is invalid', extra=dict(
+            type='invalid_url',
+            url=repository_url,
+        ))
         return templates.TemplateResponse('index.html', context)
 
     response['repo'] = owner_repo[1]  # ToDo: Create a response schema
@@ -52,7 +59,12 @@ async def index(request: Request, repository: URLSchema = Depends(URLSchema.as_f
 
     if raw_response.status_code != 200:
         errors['invalid_response'] = 'Call to GitHub API failed: An error occurred'
-        # ToDo: Add logs with status_code, reason: {raw_response.reason_phrase}
+        logger.warning(f'Call to GitHub API failed: {raw_response.reason_phrase}', extra=dict(
+            type='invalid_response',
+            url=repository_url,
+            status_code=raw_response.status_code,
+            raw_response=raw_response,
+        ))
         return templates.TemplateResponse('index.html', context)
 
     json_response = raw_response.json()
@@ -61,10 +73,23 @@ async def index(request: Request, repository: URLSchema = Depends(URLSchema.as_f
 
     if not validate_operands((num_stars, num_forks)):
         errors['invalid_response'] = 'Cannot compute popularity'
+        logger.warning(f'Cannot compute popularity', extra=dict(
+            type='invalid_response',
+            url=repository_url,
+            num_stars=num_stars,
+            num_forks=num_forks,
+            raw_response=raw_response,
+        ))
         return templates.TemplateResponse('index.html', context)
 
     score, message = calculate_score(num_stars, num_forks)
     response['score'] = score
     response['message'] = message
 
+    logger.info(f'Popularity score compute successful', extra=dict(
+        type='compute_success',
+        url=repository_url,
+        raw_response=raw_response,
+        response=response,
+    ))
     return templates.TemplateResponse('index.html', context)

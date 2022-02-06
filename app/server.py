@@ -21,6 +21,7 @@ if __name__ == '__main__':
             'server:app',
             host='0.0.0.0',
             port=int(settings.port),
+            log_level=settings.log_level.lower(),
         )
     )
     server.run()
