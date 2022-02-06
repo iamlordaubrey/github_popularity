@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from app.constants import GET_REPO_URL
+from app.schemas.response_schema import ResponseSchema
 from app.settings import settings
 from app.schemas.form_schema import URLSchema
 from app.utils.helpers import validate_url, calculate_score, validate_operands
@@ -38,21 +39,21 @@ async def index(request: Request, repository: URLSchema = Depends(URLSchema.as_f
     :return: Renders a page with the repository's popularity status
     """
     errors = {}
-    response = {'repo': None, 'score': None, 'message': None}
+    response = ResponseSchema
     context = {'request': request, 'response': response, 'errors': errors}
 
     repository_url = repository.url
     is_url_valid, owner_repo = validate_url(repository_url)
 
     if not is_url_valid:
-        errors['invalid_url'] = 'The URL {repository_url} is invalid. Sample URL: https://github.com/vuejs/vue'
-        logger.warning(f'The URL is invalid', extra=dict(
+        errors['invalid_url'] = f'The URL {repository_url} is invalid. Sample URL: https://github.com/vuejs/vue'
+        logger.warning('The URL is invalid', extra=dict(
             type='invalid_url',
             url=repository_url,
         ))
-        return templates.TemplateResponse('index.html', context)
+        return templates.TemplateResponse('index.html', context, status_code=200)
 
-    response['repo'] = owner_repo[1]  # ToDo: Create a response schema
+    response.repo = owner_repo[1]
 
     async with httpx.AsyncClient() as client:
         raw_response = await client.get(f'{GET_REPO_URL}/{owner_repo[0]}/{owner_repo[1]}')
@@ -73,7 +74,7 @@ async def index(request: Request, repository: URLSchema = Depends(URLSchema.as_f
 
     if not validate_operands((num_stars, num_forks)):
         errors['invalid_response'] = 'Cannot compute popularity'
-        logger.warning(f'Cannot compute popularity', extra=dict(
+        logger.warning('Cannot compute popularity', extra=dict(
             type='invalid_response',
             url=repository_url,
             num_stars=num_stars,
@@ -83,10 +84,10 @@ async def index(request: Request, repository: URLSchema = Depends(URLSchema.as_f
         return templates.TemplateResponse('index.html', context)
 
     score, message = calculate_score(num_stars, num_forks)
-    response['score'] = score
-    response['message'] = message
+    response.score = score
+    response.message = message
 
-    logger.info(f'Popularity score compute successful', extra=dict(
+    logger.info('Popularity score compute successful', extra=dict(
         type='compute_success',
         url=repository_url,
         raw_response=raw_response,
