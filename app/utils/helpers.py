@@ -1,10 +1,7 @@
 from typing import Tuple, List, Iterable
 
-GITHUB_BASE_URLS = (
-    'https://github.com',
-    'http://github.com',
-    'github.com',
-)  # ToDo: Move to constants file
+from app.constants import GITHUB_BASE_URLS
+from app.enums import Message
 
 
 def validate_url(url: str) -> Tuple[bool, List | None]:
@@ -29,9 +26,8 @@ def validate_operands(operands: Iterable[int]) -> bool:
 def calculate_score(num_stars: int, num_forks: int) -> Tuple:
     score = (num_stars * 1) + (num_forks * 2)
 
-    message = 'unpopular'
+    message = Message.UNPOPULAR.value
     if score >= 500:
-        message = 'popular'
-    # ToDo: Make message a string enum; put enums in enums.py
+        message = Message.POPULAR.value
 
     return score, message

@@ -6,18 +6,13 @@ from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
+from app.constants import GET_REPO_URL
 from app.settings import settings
 from app.schemas.form_schema import URLSchema
 from app.utils.helpers import validate_url, calculate_score, validate_operands
 
 router = APIRouter()
 templates = Jinja2Templates(directory=Path(settings.root_dir, "templates"))
-
-# ToDo: Move to constants folder?
-GITHUB_CLIENT_ID='60085f3d56fdc34bb6b4'
-GITHUB_CLIENT_SECRET='c44fc16a990319b3632c708be48c528faa8b55de'
-ACCESS_TOKEN = 'https://github.com/login/oauth/access_token'
-GET_REPO_URL = 'https://api.github.com/repos'
 
 
 @router.get('/', response_class=HTMLResponse)
