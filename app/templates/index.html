@@ -11,16 +11,18 @@
         <input type="submit" value="Check Popularity">
     </form>
 
-    <h2>
+    <section>
         {% if errors %}
             <ul>
-                {% for error_key, error_value in errors.items() %}
+                {% for _, error_value in errors.items() %}
                     <li>{{ error_value }}</li>
                 {% endfor %}
             </ul>
+        {% elif response %}
+            <p>The repo "{{ response.repo }}" is {{ response.message }} with a score of {{ response.score }}</p>
         {% else %}
-            <p>{{ response }}</p>
+            <p>Please enter the link to a GitHub repository</p>
         {% endif %}
-    </h2>
+    </section>
 </body>
 </html>

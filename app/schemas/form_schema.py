@@ -2,7 +2,7 @@ from fastapi import Form
 from pydantic.main import BaseModel
 
 
-class RepositoryURLSchema(BaseModel):
+class URLSchema(BaseModel):
     url: str
 
     @classmethod
