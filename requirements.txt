@@ -10,12 +10,19 @@ anyio==3.5.0
     #   starlette
 asgiref==3.5.0
     # via uvicorn
+asynctest==0.13.0
+    # via -r requirements.in
+attrs==21.4.0
+    # via pytest
 certifi==2021.10.8
     # via
     #   httpcore
     #   httpx
+    #   requests
 charset-normalizer==2.0.11
-    # via httpx
+    # via
+    #   httpx
+    #   requests
 click==8.0.3
     # via uvicorn
 fastapi==0.73.0
@@ -31,16 +38,35 @@ httpx==0.22.0
 idna==3.3
     # via
     #   anyio
+    #   requests
     #   rfc3986
+iniconfig==1.1.1
+    # via pytest
 jinja2==3.0.3
     # via -r requirements.in
 markupsafe==2.0.1
     # via jinja2
+packaging==21.3
+    # via pytest
+pluggy==1.0.0
+    # via pytest
+py==1.11.0
+    # via pytest
 pydantic==1.9.0
     # via fastapi
+pyparsing==3.0.7
+    # via packaging
+pytest==7.0.0
+    # via
+    #   -r requirements.in
+    #   pytest-asyncio
+pytest-asyncio==0.17.2
+    # via -r requirements.in
 python-dotenv==0.19.2
     # via -r requirements.in
 python-multipart==0.0.5
+    # via -r requirements.in
+requests==2.27.1
     # via -r requirements.in
 rfc3986[idna2008]==1.5.0
     # via httpx
@@ -53,7 +79,11 @@ sniffio==1.2.0
     #   httpx
 starlette==0.17.1
     # via fastapi
+tomli==2.0.0
+    # via pytest
 typing-extensions==4.0.1
     # via pydantic
-uvicorn==0.17.1
+urllib3==1.26.8
+    # via requests
+uvicorn==0.17.4
     # via -r requirements.in

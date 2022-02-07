@@ -3,6 +3,7 @@ import logging
 
 from pathlib import Path
 
+from fastapi import status
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -51,7 +52,7 @@ async def index(request: Request, repository: URLSchema = Depends(URLSchema.as_f
             type='invalid_url',
             url=repository_url,
         ))
-        return templates.TemplateResponse('index.html', context, status_code=200)
+        return templates.TemplateResponse('index.html', context, status_code=status.HTTP_400_BAD_REQUEST)
 
     response.repo = owner_repo[1]
 
@@ -66,7 +67,7 @@ async def index(request: Request, repository: URLSchema = Depends(URLSchema.as_f
             status_code=raw_response.status_code,
             raw_response=raw_response,
         ))
-        return templates.TemplateResponse('index.html', context)
+        return templates.TemplateResponse('index.html', context, status_code=raw_response.status_code)
 
     json_response = raw_response.json()
     num_stars = json_response.get('watchers')
@@ -81,7 +82,7 @@ async def index(request: Request, repository: URLSchema = Depends(URLSchema.as_f
             num_forks=num_forks,
             raw_response=raw_response,
         ))
-        return templates.TemplateResponse('index.html', context)
+        return templates.TemplateResponse('index.html', context, status_code=status.HTTP_418_IM_A_TEAPOT)
 
     score, message = calculate_score(num_stars, num_forks)
     response.score = score
@@ -93,4 +94,4 @@ async def index(request: Request, repository: URLSchema = Depends(URLSchema.as_f
         raw_response=raw_response,
         response=response,
     ))
-    return templates.TemplateResponse('index.html', context)
+    return templates.TemplateResponse('index.html', context, status_code=status.HTTP_200_OK)

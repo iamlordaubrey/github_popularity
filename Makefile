@@ -32,3 +32,8 @@ pip_sync: requirements.txt
 runserver:
 	test -r .env || make env
 	$(VENV)/bin/uvicorn app.server:app --host 0.0.0.0 --port 9080 --reload
+
+spec=test
+runtest:
+	source $(VENV)/bin/activate \
+	&& PYTHONDONTWRITEBYTECODE=1 $(VENV)/bin/pytest -vvv '${spec}'
