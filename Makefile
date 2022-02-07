@@ -1,5 +1,8 @@
 VENV := .venv
 
+CI_BRANCH := $(shell git branch | grep \* | cut -d ' ' -f2)
+CI_COMMIT_ID := $(shell git rev-parse HEAD)
+
 clean_venv:
 	source deactivate || true
 	rm -rf $(VENV)
@@ -31,6 +34,8 @@ pip_sync: requirements.txt
 
 runserver:
 	test -r .env || make env
+	CI_BRANCH=$(CI_BRANCH) \
+	CI_COMMIT_ID=$(CI_COMMIT_ID) \
 	$(VENV)/bin/uvicorn app.server:app --host 0.0.0.0 --port 9080 --reload
 
 spec=test

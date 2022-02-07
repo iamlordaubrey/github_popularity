@@ -20,6 +20,11 @@ Run server
 make runserver
 ```
 
+Run tests
+```commandline
+make runtest
+```
+
 # Docker #
 To run the application using docker
 ```commandline
@@ -31,9 +36,10 @@ To rebuild the image, then run the application
 docker-compose up --build
 ```
 
-# Documentation #
-Interactive API documentation available at the following endpoints:
-```commandline
-/docs
-/redoc
+# Available Endpoints #
+```json lines
+/         : Main application endpoint
+/status   : Healthcheck endpoint
+/docs     : Documentation
+/redoc    : Documentation
 ```

@@ -11,6 +11,9 @@ class Settings(BaseSettings):
 
     log_level: str = 'INFO'
 
+    ci_commit_id: str
+    ci_branch: str
+
     class Config:
         env_file = DIR_PATH + '/../.env'
 
