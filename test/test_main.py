@@ -1,5 +1,5 @@
-import httpx
 import asynctest
+import httpx
 import pytest
 
 from fastapi import status

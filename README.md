@@ -1,5 +1,22 @@
 # GitHub Popularity #
-Displays popularity of a given github repository
+
+Description: Tells if a given github repository is popular or not!
+
+### Assumptions
+- The service is being accessed through a browser
+
+### Tech Stack
+Built using the FastAPI framework. libraries are kept as minimal as possible. Key libraries
+include: Uvicorn, httpx, jinja2 and pytest
+
+Runtime: Python 3.10.0 (can be found in `.python-version` file)
+
+### Possible Improvements
+- Allow for json requests
+- Improve the UI on the front end
+- Improve the error reporting
+- Add functionality to compare two or more repositories
+
 
 # Install #
 Creates a fresh virtual environment (called .venv) and installs requirements
